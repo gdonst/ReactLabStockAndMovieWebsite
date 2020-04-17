@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Lab 20a</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+        <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+        <link rel="stylesheet" href="lab20a-test01.css" />
+
+        <!--The React JS libraries -->
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <!--Initially, we will use the babel run-time library to convert JSX in the browser -->
+        <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>   
+
+        <script src="movie-data.js"></script>
+
+        <script type="text/babel">
+
+/* In this example we are demonstrating controlled components for forms
+
+*/
+class App extends React.Component {
+
+
+    // notice that movie data has already been added to state
+    state = {
+        movies: movieData
+    }
+
+saveChanges = (changedMovie, index) => {
+    const tempList = this.state.movies;
+    // first make copy of movies array from state
+
+    tempList[index] = changedMovie;
+    // now set the array element (use index) in the copy
+    // to a new movie object using the data in changedMovie
+
+    this.setState({movies: tempList});
+    // finally use setState with the copy
+}
+
+
+render() {
+    return (
+        <main className="container">
+            <section className="columns has-background-light">
+                { 
+                    <MovieList list={this.state.movies}/>
+                }
+                <div className="column is-half">
+                        {this.state.movies.map(
+                            (m, index) => <MovieForm movie={m} key={m.id} index={index} saveChanges={this.saveChanges}/>
+                            // - Use map to output a MovieForm element for each movie 
+                            // - Be sure to include both index and key
+                        )}
+            </div>
+            </section>
+            </main>                
+    );
+}
+
+}
+
+
+/* 
+------------------------------------------------------------------------------------------------------------------
+*/
+class MovieForm extends React.Component {
+    handleChange = (e) => {
+        const changedMovie = { ...this.props.movie };
+        changedMovie[e.currentTarget.name] = e.currentTarget.value;
+        this.props.saveChanges(changedMovie, this.props.index);
+    }
+
+    render() {
+        const { title , tagline , runtime } = this.props.movie;
+        return (
+            <form className="panel has-background-grey-lighter"  >
+
+                <div className="field is-horizontal">
+                    <div className="field-label is-normal">
+                        <label className="label">Title</label>
+            </div>
+                    <div className="field-body">
+                        <input className="input" type="text" value={title} name="title" onChange={this.handleChange}/>   
+            </div>
+            </div>   
+
+                <div className="field is-horizontal">
+                    <div className="field-label is-normal">
+                        <label className="label">Tagline</label>
+            </div>
+                    <div className="field-body">
+                        <textarea className="textarea" rows="2" value={tagline} name="tagline" onChange={this.handleChange}></textarea>
+            </div>
+            </div>                  
+
+                <div className="field is-horizontal">
+                    <div className="field-label is-normal">
+                        <label className="label">Runtime</label>
+            </div>
+                    <div className="field-body">
+                        <input className="input" type="text" value={runtime} name="runtime" onChange={this.handleChange}/>   
+            </div>
+            </div>    
+
+            </form>
+        );
+    }
+}
+
+/* 
+------------------------------------------------------------------------------------------------------------------
+*/
+class MovieList extends React.Component {
+
+
+    render() {
+        return (
+            <div className="column is-half">
+                <ul className="columns is-multiline">
+                    {this.props.list.map(
+                        (m, index) => <SingleMovie movie={m} key={m.id} index={index}/>
+                    )}
+            </ul>   
+            </div>   
+        );
+    }
+
+}
+
+/* 
+------------------------------------------------------------------------------------------------------------------
+*/
+class SingleMovie extends React.Component {
+
+
+    render() {
+        return (
+            <li className="column is-one-third-desktop is-half-tablet"  >
+                <div className="card">
+                    <div className="card-image">
+                        <figure className="image is-2by3">
+                            <img src={"https://image.tmdb.org/t/p/w185" + this.props.movie.poster} alt={this.props.movie.title} />
+            </figure>
+            </div>
+                    <div className="card-content has-text-centered content-rectangle">
+                        <h2 className="title is-6">{this.props.movie.title + " (" + this.props.movie.runtime + "min)"}</h2>
+                        <p className="is-size-7">{this.props.movie.tagline}</p>
+            </div>    
+                    <footer className="card-footer">
+                        {
+                            <MovieLink tmdbID={this.props.movie.id}/>
+                        }
+
+            </footer>                                      
+            </div>                
+            </li>
+        )
+
+    }
+
+}
+
+/* 
+------------------------------------------------------------------------------------------------------------------
+*/
+
+const MovieLink = props => {
+    return(
+        <a className="button card-footer-item"
+            href={"https://www.themoviedb.org/movie/" + props.tmdbID}>
+            <img src="images/tmdb.svg" width="30" />
+            </a>
+    )
+}
+
+/* 
+------------------------------------------------------------------------------------------------------------------
+*/
+
+ReactDOM.render(<App />, document.querySelector('#react-container')); 
+
+        </script> 
+
+
+    </head>
+    <body>
+        <div id='react-container' ></div>
+    </body>
+</html>

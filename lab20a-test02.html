@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Lab 20a</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+        <link rel="stylesheet" href="lab20a-test02.css" />
+        <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+        <!--The React JS libraries -->
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <!--Initially, we will use the babel run-time library to convert JSX in the browser -->
+        <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>    
+
+        <script src="movie-data.js"></script>
+
+        <script type="text/babel">
+/* 
+------------------------------------------------------------------------------------------------------------------
+*/
+class App extends React.Component {
+    state = {
+        movies: movieData,
+        favorites: []
+    }
+
+addToFavorites = (movie) =>{
+    //1. retrieve data from state
+    const data = this.state.favorites;
+    //2. modify data
+    data.push({movie});
+    //3. add back to state
+    this.setState({favorites:data});
+}
+
+render() {
+    return (
+        <main class="section">
+            <article class="container">
+                {
+                    <div>
+                         <FavoritesList list={this.state.favorites}/>
+                        <Movies list={this.state.movies} addToFavorites={this.addToFavorites}/>
+                    </div>
+                }
+            </article>
+        </main>                
+    );
+}
+}
+
+
+/* 
+------------------------------------------------------------------------------------------------------------------
+*/
+const Header = props => {
+    <FavoritesList list={this.props.list}/>
+};
+
+
+
+
+/* 
+------------------------------------------------------------------------------------------------------------------
+*/
+class FavoritesList extends React.Component {
+    render() {
+        return (
+            <section className="favorites">
+                <h1 className="title is-4">Favorites</h1>  
+                <div className="columns is-multiline">
+                    {this.props.list && this.props.list.map(
+                        (m, index) => <SingleFavorite movie={m.movie} key={m.movie.id} index={index}/>
+                    )}
+            </div>
+            </section>
+        )}
+}
+
+
+/* 
+------------------------------------------------------------------------------------------------------------------
+*/
+class SingleFavorite extends React.Component {
+    render() {
+        return (
+            <div className="column is-1">
+                <img src={"https://image.tmdb.org/t/p/w92" + this.props.movie.poster} alt={this.props.movie.title}/>
+            </div>
+        )}
+}
+
+
+/* 
+------------------------------------------------------------------------------------------------------------------
+*/
+class Movies extends React.Component {
+    render() {
+        return (
+            <ul className="columns is-multiline">
+                {this.props.list.map(
+                    (m, index) => <SingleMovie movie={m} key={m.id} index={index} addToFavorites={this.props.addToFavorites}/>
+                )}
+            </ul>  
+        );
+    }
+}
+
+/* 
+------------------------------------------------------------------------------------------------------------------
+*/
+class SingleMovie extends React.Component {
+    render() {
+        return (
+            <li className="column is-one-fifth-desktop is-half-tablet">
+                <div className="card">
+                    <div className="card-image">
+                        <figure className="image is-2by3">
+                            <img src={"https://image.tmdb.org/t/p/w342" + this.props.movie.poster} alt={this.props.movie.title}/>
+            </figure>
+            </div>
+                    <div className="card-content has-text-centered content-rectangle">
+                        <h2 className="title is-5">{this.props.movie.title}</h2>
+                        <p className="is-size-7">{this.props.movie.tagline}</p>
+            </div>
+                    <footer className="card-footer">
+                        <button className="button card-footer-item" onClick={()=>this.props.addToFavorites(this.props.movie)}>
+                            <span className="icon is-small">
+                                <i className="fas fa-heart"></i>
+            </span>
+            </button>  
+            </footer>                        
+            </div>                
+            </li>
+        )
+    }
+}
+
+
+
+/* 
+  ------------------------------------------------------------------------------------------------------------------
+*/
+ReactDOM.render(<App />, document.querySelector('#react-container'));  
+        </script>
+
+    </head>
+    <body>
+        <main class="section" id='react-container'>
+        </main>  
+    </body>

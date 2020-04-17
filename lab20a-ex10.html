@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lab 20a</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <style>
+        fieldset#box { margin: 1rem; padding: 0.5rem; }
+    </style>
+    <!--The React JS libraries -->
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <!--Initially, we will use the babel run-time library to convert JSX in the browser -->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>   
+    
+    
+<script type="text/babel">
+
+/* In this example we are demonstrating controlled components for forms
+
+*/
+
+class SampleForm extends React.Component {
+
+    constructor(props) {
+      super(props);
+
+    }
+
+    handleSubmit = (e) => {
+        e.preventDefault();
+        let values = `Current values are
+                      `;
+        alert(values);
+    } 
+
+
+    render() {
+        return (
+            <form className="container" onSubmit={this.handleSubmit}>
+                <fieldset id="box" className="has-background-white-ter">
+                    <legend className="is-size-3">Uncontrolled Components</legend>
+                    <label className="label">Company Name</label>
+                    <input className="input" type="text"   />
+                    <label className="label">Sector</label>
+                    <div className="select">
+                        <select >
+                            <option>Select a sector</option>
+                            <option>Advertising</option>
+                            <option>Information Technology</option>
+                            <option>Telecommunications</option>
+                            <option>Textbooks</option>
+                        </select>       
+                    </div>
+                    <label className="label">Comments</label>
+                    <textarea className="textarea" ></textarea>
+                    <button className="button is-link">Submit</button>
+                </fieldset>                                   
+            </form>
+        );
+    }
+}
+    
+ReactDOM.render(<SampleForm />, document.querySelector('#react-container')); 
+  
+</script> 
+        
+        
+  </head>
+  <body>
+    <div id='react-container' ></div>
+  </body>
+</html>
